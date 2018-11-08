@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: moonsite
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: moonsite
+        version: v1
+    spec:
+      containers:
+      - name: moonsite
+        image:  gcr.io/mokeefe-sandbox/moonsite:latest
+        imagePullPolicy: Always
+        args:
+        - "phases=$(PHASES)"
+        - "facts=http://$(FACTS)"
+        ports:
+        - containerPort: 5000
+        env:
+        - name: PHASES
+          valueFrom:
+            configMapKeyRef:
+              name: hosts
+              key: phases
+        - name: FACTS
+          valueFrom:
+            configMapKeyRef:
+              name: hosts
+              key: facts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moonsite
+spec:
+  type: ClusterIP
+  selector:
+    app: moonsite
+  ports:
+  - port: 80
+    targetPort: 5000
+    name: http

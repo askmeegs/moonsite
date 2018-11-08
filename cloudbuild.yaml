@@ -1,0 +1,32 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/mokeefe-sandbox/moonsite:latest', '.']
+  timeout: 500s
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/mokeefe-sandbox/moonsite:latest']
+  timeout: 500s
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'kubernetes/configmap.yml']
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=standard-cluster-1'
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'kubernetes/moonsite.yml']
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=standard-cluster-1'
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'kubernetes/istio-dr-mtls.yml']
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=standard-cluster-1'
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'kubernetes/istio-external.yml']
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=standard-cluster-1'
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'kubernetes/istio-vs.yml']
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=standard-cluster-1'

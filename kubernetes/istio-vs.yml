@@ -1,0 +1,47 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: moonsite
+spec:
+  hosts:
+  - moonsite
+  http:
+  - match:
+    route:
+    - destination:
+        host: moonsite
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: moonfacts
+spec:
+  hosts:
+  - moonfacts
+  http:
+  - match:
+    route:
+    - destination:
+        host: moonfacts
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: moonphases
+spec:
+  hosts:
+  - moonphases
+  http:
+  - route:
+    - destination:
+        host: moonphases
+        port:
+          number: 80
+        subset: v2
+      weight: 50
+    - destination:
+        host: moonphases
+        port:
+          number: 80
+        subset: v1
+      weight: 50
