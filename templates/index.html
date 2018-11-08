@@ -1,0 +1,120 @@
+<!-- Uses a transparent header that draws on top of the layout's background -->
+<style>
+    .demo-layout-transparent {
+      background: url('/static/header-photo.jpeg') center / cover;
+    }
+    .demo-layout-transparent .mdl-layout__header,
+    .demo-layout-transparent .mdl-layout__drawer-button {
+      /* This background is dark, so we set text to white. Use 87% black instead if
+         your background is light. */
+      color: white;
+    }
+  .fact {
+    width: 40%;
+  }
+
+        .page {
+      margin-left: 60px;
+      padding-top: 15px;
+    }
+
+    p,body{
+      color: white;
+    }
+    table{
+      color: gray;
+    }
+    <!-- Wide card with share menu button -->
+<style>
+.demo-card-wide.mdl-card {
+  width: 512px;
+}
+.demo-card-wide > .mdl-card__title {
+  color: #fff;
+  height: 176px;
+  background: url('../assets/demos/welcome_card.jpg') center / cover;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+</style>
+    </style>
+        <head><link href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACeZ6v8yue//N8fx/zfH8f8yue//J5nq/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ5nq/zK47/9B4fX/QeH1/03j9v9P4/b/QeH1/0Hh9f8yuO//Jpjq/wAAAAAAAAAAAAAAAAAAAAAAAAAAK6bs/z/d9P9B4fX/QuH1/0fi9v9V5Pb/X+b2/2nn9/9z6fj/QOH1/z/c9P8sp+z/AAAAAAAAAAAAAAAAJZXq/z3X8/8nmer/J5nq/zK47/8nmer/J5nq/0Hh9f9B4fX/eur4/4Xr+P+P7fn/P9z0/yWV6v8AAAAAAAAAACeZ6v8nmer/AAAAAAAAAAAAAAAAAAAAAAAAAAAmler9Oczy/0Hh9f+N7fn/l+75/0fi9f8yuO//AAAAACST6f8pnuv/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACeZ6v81wPD/QeH1/5/v+f+p8fr/QeD1/yaW6v8ller/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ5nq/znM8v9v6Pf/svL6/0Hh9f8yuO//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmlur/QeH1/7nz+//E9fz/N8Xx/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACeZ6v/A9fz/xvb8/zfF8f8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7z/P/xvb8/7Pz+/8yt+//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ5nq/8b2/P9B4fX/Jpfq/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACeZ6v/G9vz/O9Dy/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACaX6vDG9vz/QN30/yeY6v8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2wfD/Ptr0/yum7P8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArpOz/Mrjv/yaY6v8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnmOr/JZTp/wAAAAAAAAAAAAAAAAAAAAAAAAAA+B8AAOAHAADAAwAAgAEAAJ8BAAA/gAAAf8AAAP/gAAD/8AAA//AAAP/wAAD/8QAA/+EAAP/jAAD/xwAA/58AAA==" rel="icon" type="image/x-icon" /></head>
+        <!doctype html>
+        <title>Moon Info </title>
+    <div class="demo-layout-transparent mdl-layout mdl-js-layout">
+
+      <header class="mdl-layout__header mdl-layout__header--transparent">
+          <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-amber.min.css" />
+
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Title</span>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="">Link</a>
+          <a class="mdl-navigation__link" href="">Link</a>
+          <a class="mdl-navigation__link" href="">Link</a>
+          <a class="mdl-navigation__link" href="">Link</a>
+        </nav>
+      </div>
+      <body>
+        <div class="page">
+          <h3>Moon Phases</h3>
+
+          {% if closestPhase %}
+        
+          <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable">
+            <tbody>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">City</td>
+                <td>{{ city }}</td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Lat/Lon</td>
+                <td>{{ lat }}, {{ lon }}</td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Moon Rise</td>
+                <td>{{ rise }}</td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Moon Upper Transit</td>
+                <td>{{ upperTransit }}</td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Moon Set</td>
+                <td>{{ set }}</td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Closest Phase</td>
+                <td>{{ closestPhase }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+
+        {% else %}
+          <p>Error: Could not get Moon Phase info</p>
+        {% endif %}
+
+
+    
+          <h3>Moon Fact</h3>
+          <div class="fact">
+             {% if fact %}
+              <p>{{ fact }}</p>
+            {% else %}
+              <p>fact goes here</p>
+            {% endif %}
+            </div>
+        </div>
+
+
+
+      </body> 
+
+    </html>
