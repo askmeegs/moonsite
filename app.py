@@ -110,12 +110,9 @@ def getMoonPhase(headers):
         stub = phases_pb2_grpc.MoonPhasesStub(channel)
         res = stub.GetPhases(request=phases_pb2.GetPhasesRequest(), metadata=tup)
     except:
-        res = None
-    if res and res.status_code == 200:
-        return 200, res.PhaseInfo 
-    else:
-        status = res.status_code if res is not None and res.status_code else 500
-        return status, phases_pb2.PhaseInfo()
+        print("Error: could not get MoonPhase info")
+        return None 
+    return res.PhaseInfo 
 
 
 @app.route('/')
