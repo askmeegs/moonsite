@@ -101,8 +101,8 @@ def getMoonFact(headers):
 
 
 def getMoonPhase(headers):  
-    print("get moon phase info -- raw headers: ", headers)
-    tup = ((k, v) for k, v in headers.iteritems())
+    print("\n\n\nget moon phase info -- raw headers: ", headers)
+    tup = tuple(headers.items())
     print("istio headers as nested tuple: ", tup)
     g = args.phases.split("=")[1] 
     print(g)
