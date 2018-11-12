@@ -94,26 +94,23 @@ def getMoonFact(headers):
     except:
         res = None
     if res and res.status_code == 200:
-        return 200, res.text
+        return res.text
     else:
         status = res.status_code if res is not None and res.status_code else 500
-        return status, 'Error: could not reach MoonFacts HTTP server'
+        return 'Error: could not reach MoonFacts HTTP server'
 
 
 def getMoonPhase(headers):  
-    print("trying to get moon phase...")
+    print("get moon phase info -- raw headers: ", headers)
     tup = ((k, v) for k, v in headers.iteritems())
     print("istio headers as nested tuple: ", tup)
-    try:
-        g = args.phases.split("=")[1] 
-        channel = grpc.insecure_channel(g)
-        stub = phases_pb2_grpc.MoonPhasesStub(channel)
-        res = stub.GetPhases(request=phases_pb2.GetPhasesRequest(), metadata=tup)
-    except:
-        print("Error: could not get MoonPhase info")
-        return None 
+    g = args.phases.split("=")[1] 
+    print(g)
+    channel = grpc.insecure_channel(g)
+    stub = phases_pb2_grpc.MoonPhasesStub(channel)
+    res = stub.GetPhases(request=phases_pb2.GetPhasesRequest(), metadata=tup)
+    print(res)
     return res.PhaseInfo 
-
 
 @app.route('/')
 @trace()
