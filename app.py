@@ -101,7 +101,9 @@ def getMoonFact(headers):
 
 
 def getMoonPhase(headers):  
-    tup = [(k, v) for k, v in headers.iteritems()]
+    print("trying to get moon phase...")
+    tup = ((k, v) for k, v in headers.iteritems())
+    print("istio headers as nested tuple: ", tup)
     try:
         g = args.phases.split("=")[1] 
         channel = grpc.insecure_channel(g)
