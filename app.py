@@ -131,7 +131,4 @@ def homepage():
 
 
 if __name__=='__main__': 
-    if args.facts is None or args.phase is None:
-        print("Could not start MoonSite - need Facts / Phases URL")
-        sys.exit(1)
     app.run(debug=True, host='0.0.0.0')
