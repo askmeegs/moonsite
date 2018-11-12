@@ -50,18 +50,11 @@ def trace():
                     Format.HTTP_HEADERS,
                     dict(request.headers)
                 )
-                # Note: this tag means that the span will *not* be
-                # a child span. It will use the incoming traceid and
-                # spanid. We do this to propagate the headers verbatim.
                 rpc_tag = {tags.SPAN_KIND: tags.SPAN_KIND_RPC_SERVER}
                 span = tracer.start_span(
                     operation_name='op', child_of=span_ctx, tags=rpc_tag
                 )
             except Exception as e:
-                # We failed to create a context, possibly due to no
-                # incoming x-b3-*** headers. Start a fresh span.
-                # Note: This is a fallback only, and will create fresh headers,
-                # not propagate headers.
                 span = tracer.start_span('op')
             with span_in_context(span):
                 r = f(*args, **kwargs)
@@ -92,6 +85,7 @@ def getForwardHeaders(request):
 
     return headers
 
+
 def getMoonFact(headers):
     print("Istio headers: ", headers)
     try:
@@ -106,12 +100,13 @@ def getMoonFact(headers):
         return status, 'Error: could not reach MoonFacts HTTP server'
 
 
-def getMoonPhase(headers): 
+def getMoonPhase(headers):  
+    tup = [(k, v) for k, v in headers.iteritems()]
     try:
         g = args.phases.split("=")[1] 
         channel = grpc.insecure_channel(g)
         stub = phases_pb2_grpc.MoonPhasesStub(channel)
-        res = stub.GetPhases(request=phases_pb2.GetPhasesRequest(), metadata=headers)
+        res = stub.GetPhases(request=phases_pb2.GetPhasesRequest(), metadata=tup)
     except:
         res = None
     if res and res.status_code == 200:
