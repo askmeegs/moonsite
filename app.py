@@ -12,11 +12,9 @@ from opentracing.ext import tags
 from opentracing.propagation import Format
 from opentracing_instrumentation.request_context import get_current_span, span_in_context
 from argparse import ArgumentParser
-
+import validators
 import grpc
-
 app = Flask(__name__) 
-
 tracer = Tracer(
     one_span_per_rpc=True,
     service_name='productpage',
@@ -24,17 +22,12 @@ tracer = Tracer(
     sampler=ConstSampler(decision=True),
     extra_codecs={Format.HTTP_HEADERS: B3Codec()}
 )
-
-
 print("starting moon site")
 parser = ArgumentParser()
 parser = argparse.ArgumentParser()
 parser.add_argument("phases", nargs='?')
 parser.add_argument("facts", nargs='?')
-
 args = parser.parse_args()
-
-# source:
 # https://github.com/istio/istio/blob/master/samples/bookinfo/src/productpage/productpage.py
 def trace():
     '''
@@ -62,8 +55,6 @@ def trace():
         wrapper.__name__ = f.__name__
         return wrapper
     return decorator
-
-
 def getForwardHeaders(request):
     headers = {}
     if 'user' in session:
@@ -76,21 +67,19 @@ def getForwardHeaders(request):
                          'x-b3-flags',
                          'x-ot-span-context'
     ]
-
     for ihdr in incoming_headers:
         val = request.headers.get(ihdr)
         if val is not None:
             headers[ihdr] = val
             #print "incoming: "+ihdr+":"+val
-
     return headers
-
-
 def getMoonFact(headers):
-    print("Istio headers: ", headers)
-    try:
-        url = args.facts.split("=")[1]
-        res = requests.get(url, headers=headers, timeout=3.0)
+    try:    
+        if "=" in args.facts and validators.url(args.facts.split("=")[1]):
+            url = args.facts.split("=")[1]
+            res = requests.get(url, headers=headers, timeout=3.0)
+        else:
+            return 'Error: invalid or empty MoonFacts URL'
     except:
         res = None
     if res and res.status_code == 200:
@@ -98,20 +87,16 @@ def getMoonFact(headers):
     else:
         status = res.status_code if res is not None and res.status_code else 500
         return 'Error: could not reach MoonFacts HTTP server'
-
-
 def getMoonPhase(headers):  
-    print("\n\n\nget moon phase info -- raw headers: ", headers)
+    if "=" in args.phases:
+        url = args.phases.split("=")[1]
+    else:
+        return phases_pb2.PhaseInfo()
     tup = tuple(headers.items())
-    print("istio headers as nested tuple: ", tup)
-    g = args.phases.split("=")[1] 
-    print(g)
-    channel = grpc.insecure_channel(g)
+    channel = grpc.insecure_channel(url)
     stub = phases_pb2_grpc.MoonPhasesStub(channel)
     res = stub.GetPhases(request=phases_pb2.GetPhasesRequest(), metadata=tup)
-    print(res)
     return res.PhaseInfo 
-
 @app.route('/')
 @trace()
 def homepage():
@@ -119,7 +104,5 @@ def homepage():
     fact = getMoonFact(headers) 
     phaseInfo = getMoonPhase(headers)
     return render_template('index.html', p=phaseInfo, fact=fact)
-
-
 if __name__=='__main__': 
     app.run(debug=True, host='0.0.0.0')
